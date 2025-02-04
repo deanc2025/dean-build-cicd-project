@@ -30,8 +30,11 @@ jobs:
       - name: Install pipenv
         run: |
           pip install pipenv  # Install pipenv
-
-      - name: Install Dependencies
+      
+      - name: Install System Dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential python3-dev libpcre3 libpcre3-dev
+      
+      - name: Install Pipenv Dependencies
         run: pipenv --python 3.11 install --dev
 
       - name: Run Lint (flake8)
@@ -55,8 +58,11 @@ jobs:
       - name: Install pipenv
         run: |
           pip install pipenv  # Install pipenv
+
+      - name: Install System Dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential python3-dev libpcre3 libpcre3-dev
           
-      - name: Install Dependencies
+      - name: Install Pipenv Dependencies
         run: pipenv --python 3.11 install --dev
 
       - name: Run Tests
