@@ -18,6 +18,7 @@ jobs:
         with:
           node-version: latest
           cache: 'npm'
+          cache-dependency-path: starter/frontend/package-lock.json
 
       - name: Restore Cache
         uses: actions/cache@v4
@@ -27,10 +28,10 @@ jobs:
           restore-keys: npm-${{ runner.os }}-
 
       - name: Install Dependencies
-        run: cd starter/backend && npm ci
+        run: cd starter/frontend && npm ci
         
       - name: Run Linter
-        run: cd starter/backend && npm run lint
+        run: cd starter/frontend && npm run lint
 
   test:
     name: Run Tests
@@ -44,6 +45,7 @@ jobs:
         with:
           node-version: latest
           cache: 'npm'
+          cache-dependency-path: starter/frontend/package-lock.json
 
       - name: Restore Cache
         uses: actions/cache@v4
@@ -53,10 +55,10 @@ jobs:
           restore-keys: npm-${{ runner.os }}-
 
       - name: Install Dependencies
-        run: cd starter/backend && npm ci
+        run: cd starter/frontend && npm ci
 
       - name: Run Tests
-        run: cd starter/backend && npm run test
+        run: cd starter/frontend && npm run test
         
   build:
     name: Build Application
@@ -71,6 +73,7 @@ jobs:
         with:
           node-version: latest
           cache: 'npm'
+          cache-dependency-path: starter/frontend/package-lock.json
 
       - name: Restore Cache
         uses: actions/cache@v4
@@ -80,10 +83,10 @@ jobs:
           restore-keys: npm-${{ runner.os }}-
 
       - name: Install Dependencies
-        run: cd starter/backend && npm ci
+        run: cd starter/frontend && npm ci
 
       - name: Run Tests
-        run: cd starter/backend && npm run test
+        run: cd starter/frontend && npm run test
 
       - name: Build Image
-        run: cd starter/backend && docker build -t frontend-app .
+        run: cd starter/frontend && docker build -t frontend-app .
