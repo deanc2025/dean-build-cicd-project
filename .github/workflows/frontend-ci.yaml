@@ -10,6 +10,9 @@ jobs:
   lint:
     name: Lint Code
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: starter/frontend
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -19,7 +22,7 @@ jobs:
         with:
           node-version: latest
           cache: 'npm'
-          cache-dependency-path: starter/frontend/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Restore Cache
         uses: actions/cache@v4
@@ -29,10 +32,10 @@ jobs:
           restore-keys: npm-${{ runner.os }}-
 
       - name: Install Dependencies
-        run: cd starter/frontend && npm ci
+        run: npm ci
         
       - name: Run Linter
-        run: cd starter/frontend && npm run lint
+        run: npm run lint
 
   test:
     name: Run Tests
@@ -46,7 +49,7 @@ jobs:
         with:
           node-version: latest
           cache: 'npm'
-          cache-dependency-path: starter/frontend/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Restore Cache
         uses: actions/cache@v4
@@ -56,10 +59,10 @@ jobs:
           restore-keys: npm-${{ runner.os }}-
 
       - name: Install Dependencies
-        run: cd starter/frontend && npm ci
+        run: npm ci
 
       - name: Run Tests
-        run: cd starter/frontend && npm run test
+        run: npm run test
         
   build:
     name: Build Application
@@ -74,7 +77,7 @@ jobs:
         with:
           node-version: latest
           cache: 'npm'
-          cache-dependency-path: starter/frontend/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Restore Cache
         uses: actions/cache@v4
@@ -84,13 +87,13 @@ jobs:
           restore-keys: npm-${{ runner.os }}-
 
       - name: Install Dependencies
-        run: cd starter/frontend && npm ci
+        run: cd npm ci
 
       - name: Run Tests
-        run: cd starter/frontend && npm run test
+        run: cd npm run test
 
       - name: Build Docker Image
-        run: cd starter/frontend && docker build --build-arg REACT_APP_MOVIE_API_URL=${{ env.REACT_APP_MOVIE_API_URL }} -t mp-frontend:latest .
+        run: docker build --build-arg REACT_APP_MOVIE_API_URL=${{ env.REACT_APP_MOVIE_API_URL }} -t mp-frontend:latest .
       
       - name: Run Docker Image
-        run: cd starter/frontend && docker run --name mp-frontend -p 3000:3000 -d mp-frontend
+        run: cd docker run --name mp-frontend -p 3000:3000 -d mp-frontend
