@@ -26,6 +26,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
+      
+      - name: Install pipenv
+        run: |
+          pip install pipenv  # Install pipenv
 
       - name: Install Dependencies
         run: pipenv install
@@ -48,6 +52,10 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install pipenv
+        run: |
+          pip install pipenv  # Install pipenv
+          
       - name: Install Dependencies
         run: pipenv install
 
@@ -77,4 +85,3 @@ jobs:
 
       - name: Stop Docker
         run: docker stop
-
