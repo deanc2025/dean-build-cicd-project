@@ -5,9 +5,6 @@ on:
     paths:
       - starter/frontend/** 
   workflow_dispatch:
-
-env:
-  ECR_REPO_NAME : "moviepicture/frontend" 
   
 jobs:
   lint:
@@ -120,13 +117,11 @@ jobs:
       - name: Push Image to ECR
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-          ECR_REPO_NAME: ${{ env.ECR_REPO_NAME }}
+          ECR_REPO_NAME: ${{ secrets.ECR_REPO_NAME }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-        run:
+        run: |
           ECR_URL="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
-          echo "Pushing to ECR URL "
-          echo "${ECR_URL}/$ECR_REPO_NAME:mp-frontend"
-          cd starter/frontend && docker push "${ECR_URL}/$ECR_REPO_NAME}:mp-frontend"
+          cd starter/frontend && docker push "${ECR_URL}/$ECR_REPO_NAME}:mp-frontend:latest"
 
           
       
