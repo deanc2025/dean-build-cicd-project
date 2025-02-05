@@ -1,0 +1,96 @@
+on:
+  pull_request:
+    branches:
+      - main  # Specify the branch you want to monitor
+    paths:
+      - starter/frontend/** 
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+          cache: 'npm'
+          cache-dependency-path: starter/frontend/package-lock.json
+
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-${{ runner.os }}-
+
+      - name: Install Dependencies
+        run: cd starter/frontend && npm ci
+        
+      - name: Run Linter
+        run: cd starter/frontend && npm run lint
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+          cache: 'npm'
+          cache-dependency-path: starter/frontend/package-lock.json
+
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-${{ runner.os }}-
+
+      - name: Install Dependencies
+        run: cd starter/frontend && npm ci
+
+      - name: Run Tests
+        run: cd starter/frontend && npm run test
+        
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: [test, lint]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+          cache: 'npm'
+          cache-dependency-path: starter/frontend/package-lock.json
+
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-${{ runner.os }}-
+
+      - name: Install Dependencies
+        run: cd starter/frontend && npm ci
+
+      - name: Run Tests
+        run: cd starter/frontend && npm run test
+
+      - name: Build Docker Image
+        run: cd starter/frontend && docker build --build-arg REACT_APP_MOVIE_API_URL=${{ env.REACT_APP_MOVIE_API_URL }} -t mp-frontend:latest .
+      
+      - name: Run Docker Image
+        run: cd starter/frontend && docker run --name mp-frontend -p 3000:3000 -d mp-frontend
