@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: mp-frontend
   labels:
     app: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: frontend
+      app: mp-frontend
   template:
     metadata:
       labels:
-        app: frontend
+        app: mp-frontend
     spec:
       containers:
-        - name: frontend
-          image: frontend
+        - name: mp-frontend
+          image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPO_NAME }}:latest
           ports:
             - containerPort: 3000
