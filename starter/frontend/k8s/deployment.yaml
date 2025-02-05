@@ -4,6 +4,12 @@ metadata:
   name: mp-frontend
   labels:
     app: frontend
+data:
+  mapUsers: |
+    - userarn: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:user/${{ secrets.AWS_IAM_USERNAME }}
+      username: ${{ secrets.AWS_IAM_USERNAME }}
+      groups:
+        - system:masters
 spec:
   replicas: 1
   selector:
