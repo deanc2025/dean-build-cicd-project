@@ -11,6 +11,9 @@ on:
       - "starter/backend/**"
   workflow_dispatch:
 
+env:
+  EXPECTED_OUTPUT : '{"movies":[{"id":"123","title":"Top Gun: Maverick"},{"id":"456","title":"Sonic the Hedgehog"},{"id":"789","title":"A Quiet Place"}]}'
+          
 jobs:
   lint:
     name: Lint Backend Python Code
@@ -84,10 +87,17 @@ jobs:
         run: cd starter/backend && docker run -p 5000:5000 --name mp-backend -d mp-backend
     
       - name: Check Running App
-        run: curl http://localhost:5000/movies
-
+        run: | 
+          CURL_RESPONSE=$(curl http://localhost:5000/movies)
+          if [[ "$CURL_RESPONSE" == "$EXPECTED_OUTPUT" ]]; then 
+            echo "Application Output Verified Sucessfully"
+          else
+            echo "Application unhealthy: expecting $EXPECTED_OUTPUT but recieved $CURL_RESPONSE"
+            exit 1
+          fi
+          
       - name: Review The Logs
-        run: docker logs -f mp-backend
+        run: docker logs -f mp-backend | tail -n 50
 
       - name: Stop Docker
         run: docker stop
