@@ -99,7 +99,7 @@ jobs:
       # - name: Run Docker Image
       # run: cd starter/frontend && docker run --name mp-frontend -p 3000:3000 -d mp-frontend
 
-      - name:  Congifure AWS CLI
+      - name:  Configure AWS CLI
         uses: aws-actions/configure-aws-credentials@v2
         with: 
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
