@@ -100,11 +100,12 @@ jobs:
       # run: cd starter/frontend && docker run --name mp-frontend -p 3000:3000 -d mp-frontend
 
       - name:  Congifure AWS CLI
-        run: |
-          aws configure set aws_access_key ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
-          aws configure set region ${{ secrets.AWS_REGION }}
-          aws configure set aws_session_token ${{ secrets.AWS_SESSION_TOKEN }}
+        uses: aws-actions/configure-aws-credentials@v2
+        with: 
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+          region: ${{ secrets.AWS_REGION }}
+          aws_session_token: ${{ secrets.AWS_SESSION_TOKEN }}
           
       - name: Login to Amazon ECR
         id: login-ecr
