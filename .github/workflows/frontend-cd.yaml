@@ -125,7 +125,8 @@ jobs:
       - name: Configure Kubectl Action
         uses: azure/setup-kubectl@v1
         with:
-          kubectl-version: 'v1.24.0'
+          version: latest
+          #kubectl-version: 'v1.24.0'
 
       - name: Configure EKS cluster
         run: |
