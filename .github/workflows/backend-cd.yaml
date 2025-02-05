@@ -140,7 +140,6 @@ jobs:
 
       - name: Apply Image into EKS
         run: |
-          cd starter/frontend
           sed -i "s|LATEST_IMAGE|${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_BE_REPO_NAME }}:${{ github.sha }}|g" k8s/deployment.yaml
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
