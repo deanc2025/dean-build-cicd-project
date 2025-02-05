@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: mp-backend
   labels:
-    app: backend
+    app: mp-backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend
+      app: mp-backend
   template:
     metadata:
       labels:
-        app: backend
+        app: mp-backend
     spec:
       containers:
-        - name: backend
-          image: backend
+        - name: mp-backend
+          image: $LATEST-IMAGE
           ports:
             - containerPort: 5000
