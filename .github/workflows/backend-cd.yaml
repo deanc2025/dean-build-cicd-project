@@ -1,8 +1,10 @@
 
 on:
   pull_request:
+    branches:
+      - main
     paths:
-      - "starter/backend/**"
+      - starter/backend/** 
   workflow_dispatch:
 
 env:
