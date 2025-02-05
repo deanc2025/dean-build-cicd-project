@@ -134,7 +134,5 @@ jobs:
       - name: Apply Image into EKS
         run: |
           cd starter/frontend
-          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
-          kubectl config current-context
           kubectl apply -f k8s/deployment.yaml --validate=false
           kubectl apply -f k8s/service.yaml --validate=false
