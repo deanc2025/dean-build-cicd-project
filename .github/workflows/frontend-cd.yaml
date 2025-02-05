@@ -6,6 +6,9 @@ on:
       - starter/frontend/** 
   workflow_dispatch:
 
+env:
+  ECR_REPO_NAME : "moviepicture/frontend" 
+  
 jobs:
   lint:
     name: Lint Code
@@ -92,5 +95,25 @@ jobs:
       - name: Build Docker Image
         run: cd starter/frontend && docker build --build-arg REACT_APP_MOVIE_API_URL=${{ env.REACT_APP_MOVIE_API_URL }} -t mp-frontend:latest .
       
-      - name: Run Docker Image
-        run: cd starter/frontend && docker run --name mp-frontend -p 3000:3000 -d mp-frontend
+      # - name: Run Docker Image
+      # run: cd starter/frontend && docker run --name mp-frontend -p 3000:3000 -d mp-frontend
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Push Image to ECR
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ECR_REPO_NAME: ${{ env.ECR_REPO_NAME }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run:
+          ECR_URL="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+          starter/frontend && docker push "${ECR_URL}/$ECR_REPO_NAME}:mp-frontend:latest
+          
+      #- name:  Congifure AWS CLI
+      #  run: |
+      #    aws configure set aws_access_key ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #    aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+      #    aws configure set region ${{ secrets.AWS_REGION }}
+      
