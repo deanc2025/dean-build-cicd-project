@@ -99,6 +99,12 @@ jobs:
       # - name: Run Docker Image
       # run: cd starter/frontend && docker run --name mp-frontend -p 3000:3000 -d mp-frontend
 
+      - name:  Congifure AWS CLI
+        run: |
+          aws configure set aws_access_key ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+          aws configure set region ${{ secrets.AWS_REGION }}
+          
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
@@ -116,9 +122,4 @@ jobs:
           ECR_URL="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
           starter/frontend && docker push "${ECR_URL}/$ECR_REPO_NAME}:mp-frontend:latest
           
-      #- name:  Congifure AWS CLI
-      #  run: |
-      #    aws configure set aws_access_key ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #    aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
-      #    aws configure set region ${{ secrets.AWS_REGION }}
       
