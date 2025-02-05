@@ -1,7 +1,5 @@
 on:
   pull_request:
-    branches:
-      - main  # Specify the branch you want to monitor
     paths:
       - starter/frontend/** 
   workflow_dispatch:
