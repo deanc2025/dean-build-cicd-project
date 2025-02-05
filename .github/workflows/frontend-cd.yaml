@@ -119,13 +119,13 @@ jobs:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REPO_NAME: ${{ secrets.ECR_REPO_NAME }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
+          IMAGE_TAG: latest
         run: |
-          ECR_URL="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
-          echo "ECR URL: $ECR_URL"
+          # ECR_URL="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
           cd starter/frontend
           
-          docker tag mp-frontend:latest "${ECR_URL}/mp-frontend:latest"
-          docker push "${ECR_URL}/mp-frontend:latest"
+          docker tag mp-frontend:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:$IMAGE_TAG
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
 
           # docker push "${ECR_URL}/$ECR_REPO_NAME}:mp-frontend:latest"
 
