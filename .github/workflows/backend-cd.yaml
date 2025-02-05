@@ -80,7 +80,7 @@ jobs:
         run: cd starter/backend && docker build -t mp-backend:${{ github.sha }} .
 
       - name: Run The Docker Image
-        run: cd starter/backend && docker run -p 5000:5000 --name mp-backend -d mp-backend
+        run: cd starter/backend && docker run -p 5000:5000 --name mp-backend -d mp-backend:${{ github.sha }}
     
       - name: Check Running App
         run: | 
@@ -93,7 +93,7 @@ jobs:
           fi
           
       - name: Review The Logs
-        run: docker logs mp-backend:${{ github.sha }} | tail -n 37
+        run: docker logs mp-backend | tail -n 37
 
       - name: Stop and Delete Docker Container and Delete Image
         run: |
