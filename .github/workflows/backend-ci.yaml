@@ -97,7 +97,7 @@ jobs:
           fi
           
       - name: Review The Logs
-        run: docker logs -f mp-backend | tail -n 37
+        run: docker logs mp-backend | tail -n 37
 
       - name: Stop Docker
         run: docker stop
