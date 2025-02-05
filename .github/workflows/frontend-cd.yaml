@@ -124,4 +124,18 @@ jobs:
           cd starter/frontend
           docker tag "mp-frontend:$IMAGE_TAG" "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:$IMAGE_TAG"
           docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:$IMAGE_TAG"
-          
+       
+      - name: Configure Kubectl Action
+        uses: azure/setup-kubectl@v1
+        with:
+          kubectl-version: 'v1.24.0'
+
+      - name: Configure EKS cluster
+        run: |
+          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
+
+      - name: Apply Image into EKS
+        run: |
+          cd starter/frontend
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
