@@ -124,7 +124,9 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run:
           ECR_URL="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
-          cd starter/frontend && docker push "${ECR_URL}/$ECR_REPO_NAME}:mp-frontend:latest"
+          echo "Pushing to ECR URL "
+          echo "${ECR_URL}/$ECR_REPO_NAME:mp-frontend"
+          cd starter/frontend && docker push "${ECR_URL}/$ECR_REPO_NAME}:mp-frontend"
 
           
       
