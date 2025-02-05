@@ -100,7 +100,7 @@ jobs:
         run: |
           docker stop mp-backend || true
           docker rm mp-backend || true
-          docker rmi mp-backend:${{ github.sha }} || true
+          # docker rmi mp-backend:${{ github.sha }} || true
           
       - name:  Configure AWS CLI
         uses: aws-actions/configure-aws-credentials@v2
