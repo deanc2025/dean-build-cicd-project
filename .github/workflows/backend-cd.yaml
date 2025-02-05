@@ -122,13 +122,12 @@ jobs:
       - name: Push Image to ECR
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-          ECR_REPO_NAME: ${{ secrets.ECR_REPO_NAME }}
+          ECR_BE_REPO_NAME: ${{ secrets.ECR_BE_REPO_NAME }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          # cd starter/backend
           docker tag "mp-backend:${{ github.sha }}" "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_BE_REPO_NAME:${{ github.sha }}"
           docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_BE_REPO_NAME:${{ github.sha }}"
-       
+
       - name: Configure Kubectl Action
         uses: azure/setup-kubectl@v1
         with:
