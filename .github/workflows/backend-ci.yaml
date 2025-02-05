@@ -99,5 +99,7 @@ jobs:
       - name: Review The Logs
         run: docker logs mp-backend | tail -n 37
 
-      - name: Stop Docker
-        run: docker stop
+      - name: Stop and Delete Docker Container
+        run: |
+          docker stop mp-backend || true
+          docker rm mp-backend || true
