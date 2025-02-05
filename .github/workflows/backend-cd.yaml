@@ -100,7 +100,10 @@ jobs:
           docker stop mp-backend || true
           docker rm mp-backend || true
           docker rmi mp-backend:${{ github.sha }} || true
-          
+
+      - name: RegionIssueDeleteMe
+        run: echo "AWS_REGION=${{ secrets.AWS_REGION }}"
+        
       - name:  Configure AWS CLI
         uses: aws-actions/configure-aws-credentials@v2
         with: 
