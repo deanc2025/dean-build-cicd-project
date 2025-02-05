@@ -100,3 +100,47 @@ jobs:
           docker stop mp-backend || true
           docker rm mp-backend || true
           docker rmi mp-backend:${{ github.sha }} || true
+          
+      - name:  Configure AWS CLI
+        uses: aws-actions/configure-aws-credentials@v2
+        with: 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: true
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+
+      - name: Push Image to ECR
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ECR_REPO_NAME: ${{ secrets.ECR_REPO_NAME }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          # cd starter/backend
+          docker tag "mp-backend:${{ github.sha }}" "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_BE_REPO_NAME:${{ github.sha }}"
+          docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_BE_REPO_NAME:${{ github.sha }}"
+       
+      - name: Configure Kubectl Action
+        uses: azure/setup-kubectl@v1
+        with:
+          version: latest
+          #kubectl-version: 'v1.24.0'
+
+      - name: Configure EKS cluster
+        run: |
+          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
+
+      - name: Apply Image into EKS
+        run: |
+          cd starter/frontend
+          sed -i "s|LATEST_IMAGE|${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_BE_REPO_NAME }}:${{ github.sha }}|g" k8s/deployment.yaml
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
