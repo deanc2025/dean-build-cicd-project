@@ -80,7 +80,7 @@ jobs:
         run: cd starter/backend && docker build -t mp-backend:${{ github.sha }} .
 
       - name: Run The Docker Image
-        run: cd starter/backend && docker run -p 5000:5000 --name mp-backend:${{ github.sha }} -d mp-backend:${{ github.sha }}
+        run: cd starter/backend && docker run -p 5000:5000 --name mp-backend -d mp-backend
     
       - name: Check Running App
         run: | 
