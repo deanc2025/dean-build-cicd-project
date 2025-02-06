@@ -1,7 +1,5 @@
 on:
   pull_request:
-    paths:
-      - starter/frontend/** 
   workflow_dispatch:
 
 jobs:
