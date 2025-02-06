@@ -18,7 +18,4 @@ spec:
         - name: mp-frontend
           image: "LATEST_IMAGE"
           ports:
-            # - containerPort: 3000
-            - protocol: TCP
-              port: 3000
-              targetPort: 3000
+            - containerPort: 3000
