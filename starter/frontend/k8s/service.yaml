@@ -1,25 +1,14 @@
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: mp-frontend
-#  labels:
-#    app: mp-frontend
-#spec:
-#  type: LoadBalancer
-#  selector:
-#    app: frontend
-#  ports:
-#    - protocol: TCP
-#      port: 80
-#      targetPort: 3000
 apiVersion: v1
 kind: Service
 metadata:
   name: mp-frontend
+  labels:
+    app: mp-frontend
 spec:
   type: LoadBalancer
-  ports:
-    - port: 80        # Port exposed externally
-      targetPort: 3000  # Port on the container
   selector:
-    app: mp-frontend
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
