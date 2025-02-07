@@ -118,7 +118,7 @@ jobs:
           fi
           FULL_MP_BACKEND_URL="http://$MP_BACKEND_URL:$MP_BACKEND_PORT"
           echo "FULL_MP_BACKEND_URL=$FULL_MP_BACKEND_URL" >> $GITHUB_ENV  
-          echo "The FULL BACKEND URL = "
+          echo "Full Backend URL to use as Docker --build-arg = "
           echo $FULL_MP_BACKEND_URL
 
       - name: Build Docker Image
