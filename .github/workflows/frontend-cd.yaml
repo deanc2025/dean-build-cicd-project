@@ -88,8 +88,29 @@ jobs:
       - name: Run Tests
         run: cd starter/frontend && npm run test
 
+      - name: Configure Kubectl Action
+        uses: azure/setup-kubectl@v1
+        with:
+          version: latest
+          #kubectl-version: 'v1.24.0'
+
+      - name: Configure EKS cluster
+        run: |
+          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
+
+      - name: Lookup Backend Service URL
+        run: |
+          MP_BACKEND_URL=$(kubectl get svc mp-backend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          if [ -z "$MP_BACKEND_URL" ]; then
+            MP_BACKEND_URL=$(kubectl get svc mp-backend -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          fi
+          if [ -x "$MP_BACKEND_URL" ]; then
+            echo "ERROR:  Unable to find Backend service.  Check the MP-BACKEND service is running by running its build workflow."
+            exit 1
+          fi
+
       - name: Build Docker Image
-        run: cd starter/frontend && docker build --build-arg REACT_APP_MOVIE_API_URL=${{ env.REACT_APP_MOVIE_API_URL }} -t mp-frontend:${{ github.sha }} .
+        run: cd starter/frontend && docker build --build-arg REACT_APP_MOVIE_API_URL="$MP_BACKEND_URL" -t mp-frontend:${{ github.sha }} .
 
       - name:  Configure AWS CLI
         uses: aws-actions/configure-aws-credentials@v2
@@ -119,16 +140,6 @@ jobs:
           docker tag "mp-frontend:${{ github.sha }}" "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:${{ github.sha }}"
           docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:${{ github.sha }}"
        
-      - name: Configure Kubectl Action
-        uses: azure/setup-kubectl@v1
-        with:
-          version: latest
-          #kubectl-version: 'v1.24.0'
-
-      - name: Configure EKS cluster
-        run: |
-          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
-
       - name: Apply Image into EKS
         run: |
           cd starter/frontend
