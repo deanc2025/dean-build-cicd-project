@@ -111,18 +111,18 @@ jobs:
           if [ -z "$MP_BACKEND_URL" ]; then
             MP_BACKEND_URL=$(kubectl get svc mp-backend -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
             MP_BACKEND_PORT=$(kubectl get svc mp-backend -o jsonpath='{.spec.ports[0].port}' 2>/dev/null)
-            MP_BACKEND_URL="http://$MP_BACKEND_URL:$MP_BACKEND_PORT"
-            echo "MP_BACKEND_URL=$MP_BACKEND_URL" >> $GITHUB_ENV
+            FULL_MP_BACKEND_URL="http://$MP_BACKEND_URL:$MP_BACKEND_PORT"
+            echo "FULL_MP_BACKEND_URL=$FULL_MP_BACKEND_URL" >> $GITHUB_ENV
           fi
-          if [ -x "$MP_BACKEND_URL" ]; then
+          if [ -x "$FULL_MP_BACKEND_URL" ]; then
             echo "ERROR:  Unable to find Backend service.  Check the MP-BACKEND service is running by running its build workflow."
             exit 1
           fi
-          echo "BACKEND_URL = "
-          echo $MP_BACKEND_URL
+          echo "FULL_BACKEND_URL = "
+          echo $FULL_MP_BACKEND_URL
 
       - name: Build Docker Image
-        run: cd starter/frontend && docker build --build-arg REACT_APP_MOVIE_API_URL="$MP_BACKEND_URL" -t mp-frontend:${{ github.sha }} .
+        run: cd starter/frontend && docker build --build-arg REACT_APP_MOVIE_API_URL="$FULL_MP_BACKEND_URL" -t mp-frontend:${{ github.sha }} .
 
       - name: Login to Amazon ECR
         id: login-ecr
