@@ -111,7 +111,6 @@ jobs:
           if [ -z "$MP_BACKEND_URL" ]; then
             MP_BACKEND_URL=$(kubectl get svc mp-backend -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
             echo "MP_BACKEND_URL=$MP_BACKEND_URL" >> $GITHUB_ENV
-            echo "FOUND MP-BACKEND service URL:  $MP_BACKEND_URL"
           fi
           if [ -x "$MP_BACKEND_URL" ]; then
             echo "ERROR:  Unable to find Backend service.  Check the MP-BACKEND service is running by running its build workflow."
